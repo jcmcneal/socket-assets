@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Socket Assets</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="/socket.io/socket.io.js"></script>
+    <script>const socket = io();</script>
+</head>
+<body>
+    Hey
+
+    <script type="text/javascript">
+        socket.on('message', (data) => {
+            console.log(data);
+        });
+        socket.on('asset', (data) => {
+            console.log('Received:', data);
+        });
+
+        const getAssets = (assets) => {
+            socket.emit('getAssets', { assets });
+        };
+
+        getAssets({
+            js: [
+                'aksb.min.js',
+                'overstock.7.0.62.min.js',
+                'os-async.5.0.2.min.js?89723649237498278347289347',
+                'ostk-user-tracking-all.2.0.1.min.js',
+                'overstock-page-trigger.1.1.0.min.js',
+                'optimizely.2.1.2.min.js',
+                'Y48CW-Z5XAF-RXHS2-H9UFB-EJ2JY',
+                'jwplayer.6.7.4.min.js',
+                'ads.js',
+                'product-page.3.25.2.min.js',
+                'VisitorAPI.js',
+                's_code_async.js',
+            ]
+        });
+
+    </script>
+</body>
+</html>
