@@ -5,41 +5,80 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>Socket Assets</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Static CSS -->
+    <link rel="stylesheet" href="/node_modules/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/node_modules/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/css/product-page.3.25.1.min.css">
     <script src="/socket.io/socket.io.js"></script>
     <script>const socket = io();</script>
 </head>
 <body>
     Hey
+    <button class='btn btn-primary'>Button</button>
 
     <script type="text/javascript">
+        // Inject Functions
+        const injectCSS = (css) => {
+            const style = document.createElement('style');
+            style.type = 'text/css';
+            style.src = css.asset;
+            style.append(css.content);
+            document.head.appendChild(style);
+        };
+        const injectJS = (js) => {
+            const script = document.createElement('script');
+            script.type = 'text/javascript';
+            // script.src = js.asset;
+            script.append(js.content);
+            document.body.appendChild(script);
+        };
+    </script>
+    <script type="text/javascript">
+        // Socket Functions
         socket.on('message', (data) => {
-            console.log(data);
+            console.log('message', data);
         });
-        socket.on('asset', (data) => {
-            console.log('Received:', data);
+        socket.on('asset', (asset) => {
+            result[asset.src] = {
+                speed: `${(performance.now() - result.start).toFixed(4)} ms`,
+            };
+            switch (asset.type) {
+                case 'css': injectCSS(asset); break;
+                case 'js': injectJS(asset); break;
+                default: console.log('Cant inject: ', asset)
+            }
         });
 
         const getAssets = (assets) => {
-            socket.emit('getAssets', { assets });
+            // Start timing
+            result = {
+                start: performance.now()
+            };
+            socket.emit('getAssets', assets);
         };
 
-        getAssets({
-            js: [
-                'aksb.min.js',
-                'overstock.7.0.62.min.js',
-                'os-async.5.0.2.min.js?89723649237498278347289347',
-                'ostk-user-tracking-all.2.0.1.min.js',
-                'overstock-page-trigger.1.1.0.min.js',
-                'optimizely.2.1.2.min.js',
-                'Y48CW-Z5XAF-RXHS2-H9UFB-EJ2JY',
-                'jwplayer.6.7.4.min.js',
-                'ads.js',
-                'product-page.3.25.2.min.js',
-                'VisitorAPI.js',
-                's_code_async.js',
-            ]
-        });
+        // CSS
+        // getAssets({ type: 'css', src: 'node_modules/bootstrap/dist/css/bootstrap.min.css' });
+        // getAssets({ type: 'css', src: 'node_modules/font-awesome/css/font-awesome.min.css' });
+        // getAssets({ type: 'css', src: 'css/product-page.3.25.1.min.css' });
+        // JS
+        // getAssets([
+        //     { type: 'js', src: 'node_modules/jquery/dist/jquery.min.js' },
+        //     { type: 'js', src: 'node_modules/bootstrap/dist/js/bootstrap.min.js' },
+        //     { type: 'js', src: 'node_modules/moment/min/moment.min.js' },
+        //     { type: 'js', src: 'node_modules/angular/angular.min.js' },
+        //     { type: 'js', src: 'node_modules/react/umd/react.production.min.js' },
+        //     { type: 'js', src: 'node_modules/react-dom/umd/react-dom.production.min.js' },
+        //     { type: 'js', src: 'js/product-page.3.25.1.min.js' },
+        // ]);
 
     </script>
+    <script type="text/javascript" src="node_modules/jquery/dist/jquery.min.js"></script>
+    <script type="text/javascript" src="node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="node_modules/moment/min/moment.min.js"></script>
+    <script type="text/javascript" src="node_modules/angular/angular.min.js"></script>
+    <script type="text/javascript" src="node_modules/react/umd/react.production.min.js"></script>
+    <script type="text/javascript" src="node_modules/react-dom/umd/react-dom.production.min.js"></script>
+    <script type="text/javascript" src="js/product-page.3.25.1.min.js"></script>
 </body>
 </html>
